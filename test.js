@@ -3,15 +3,15 @@ var assert = require('assert'),
 
 var tests = [
 
-	function is_writable_and_readable() {
+	function is_writable_and_readable(done) {
 		var req = new MockRequest();
 		assert(req.readable);
 		assert(req.writable);
 
-		next();
+		done();
 	},
 
-	function default_options() {
+	function default_options(done) {
 		var req = new MockRequest();
 
 		assert.equal(typeof req.url, 'string');
@@ -19,10 +19,10 @@ var tests = [
 		assert.deepEqual(req.headers, {});
 		assert.deepEqual(req.rawHeaders, []);
 
-		next()
+		done()
 	},
 
-	function parses_headers() {
+	function parses_headers(done) {
 		var req = new MockRequest({
 			headers: {
 				'Content-Type': 'text/plain',
@@ -39,10 +39,10 @@ var tests = [
 			'10'
 		]);
 
-		next()
+		done()
 	},
 
-	function automatically_ends_for_bodiless() {
+	function automatically_ends_for_bodiless(done) {
 		var ends = {
 			GET: true,
 			HEAD: true,
@@ -60,10 +60,10 @@ var tests = [
 			assert.equal(req._writableState.ended, ends[method], method);
 		});
 
-		next();
+		done();
 	},
 
-	function string_body() {
+	function string_body(done) {
 		var req = new MockRequest({
 			method: 'POST'
 		});
@@ -75,11 +75,11 @@ var tests = [
 		req.once('readable', function() {
 			var d = this.read();
 			assert.equal(d, 'hello');
-			next();
+			done();
 		});
 	},
 
-	function json_body() {
+	function json_body(done) {
 		var req = new MockRequest({
 			method: 'POST'
 		});
@@ -93,11 +93,11 @@ var tests = [
 		req.once('readable', function() {
 			var d = this.read();
 			assert.deepEqual(d, '{"hello":3}');
-			next();
+			done();
 		});
 	},
 
-	function buffer_body() {
+	function buffer_body(done) {
 		var req = new MockRequest({
 			method: 'POST'
 		});
@@ -109,11 +109,11 @@ var tests = [
 		req.once('readable', function() {
 			var d = this.read();
 			assert.equal(d, buf);
-			next();
+			done();
 		});
 	},
 
-	function fails() {
+	function fails(done) {
 		var req = new MockRequest({
 			method: 'POST'
 		});
@@ -123,7 +123,7 @@ var tests = [
 
 		req.on('error', function(err2) {
 			assert.equal(err, err2);
-			next();
+			done();
 		});
 
 		req.write('yo');
@@ -131,20 +131,18 @@ var tests = [
 
 ];
 
-var ready = true;
 
-function next() {
-	ready = true;
-}
+var doneCount = 0;
+tests.forEach(function(test) {
+	test(done.bind(null, test.name));
+});
 
-setInterval(function() {
-	if (!ready) return;
-	var test = tests.shift();
-	if (!test) {
-		console.log('All tests passed');
+function done(name) {
+	console.log(name);
+	doneCount++;
+
+	if (doneCount === tests.length) {
+		console.log('>> All tests passed');
 		return process.exit(0);
 	}
-
-	ready = false;
-	test();
-}, 0);
+}
