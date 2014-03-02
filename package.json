@@ -1,0 +1,26 @@
+{
+  "name": "mock-req",
+  "version": "0.0.0",
+  "description": "Mocks node.js `http.IncomingMessage` (a request).  See also `mock-res`.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diachedelic/mock-req.git"
+  },
+  "keywords": [
+    "mock",
+    "IncomingMessage",
+    "req",
+    "request",
+    "test",
+    "stub"
+  ],
+  "author": "James Diacono",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/diachedelic/mock-req/issues"
+  }
+}
