@@ -32,10 +32,17 @@ function MockIncomingMessage(options) {
 	this.rawHeaders = [];
 	if (options.headers)
 		Object.keys(options.headers).forEach(function(key) {
-			var val = options.headers[key].toString();
-			self.headers[key.toLowerCase()] = val;
-			self.rawHeaders.push(key);
-			self.rawHeaders.push(val);
+			var val = options.headers[key];
+
+			if(val !== undefined) {
+				if (typeof val !== 'string') {
+					val += '';
+				}
+
+				self.headers[key.toLowerCase()] = val;
+				self.rawHeaders.push(key);
+				self.rawHeaders.push(val);
+			}
 		});
 
 	// Auto-end when no body
