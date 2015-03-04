@@ -32,16 +32,13 @@ function MockIncomingMessage(options) {
 	this.rawHeaders = [];
 	if (options.headers)
 		Object.keys(options.headers).forEach(function(key) {
-			// Only if the value is defined
-			if( typeof options.headers[key] !== 'undefined' ) {
-				
-				// Convert it to string if not
-				if (typeof headerVal !== 'string') {
-					
-					options.headers[key] += '';
+			var val = options.headers[key];
+
+			if(val !== undefined) {
+				if (typeof val !== 'string') {
+					val += '';
 				}
-				
-				var val = options.headers[key].toString();
+
 				self.headers[key.toLowerCase()] = val;
 				self.rawHeaders.push(key);
 				self.rawHeaders.push(val);
