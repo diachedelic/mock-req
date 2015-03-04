@@ -42,6 +42,19 @@ var tests = [
 		done()
 	},
 
+	function undefined_header(done) {
+		var req = new MockRequest({
+			headers: {
+				'foo': undefined
+			}
+		});
+
+		assert.equal(req.rawHeaders.indexOf('foo'), -1);
+		assert.equal(req.headers['foo'], undefined);
+
+		done()
+	},
+
 	function automatically_ends_for_bodiless(done) {
 		var ends = {
 			GET: true,
