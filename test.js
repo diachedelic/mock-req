@@ -4,7 +4,10 @@ var assert = require('assert'),
 var tests = [
 
 	function is_writable_and_readable(done) {
-		var req = new MockRequest();
+		var req = new MockRequest({
+			method: 'POST',
+		});
+
 		assert(req.readable);
 		assert(req.writable);
 
